@@ -29,7 +29,7 @@ int main() {
                  barra_de_carga();
                 break;
             case 4:
-
+                luces_alternadas();
                 break;
             case 5:
                 printf("Saliendo del programa...\n");
