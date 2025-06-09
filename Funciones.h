@@ -14,7 +14,7 @@ void password(){
 
 
     int intentos=0;
-    while (intentos<3) {
+    while (intentos<3) {.text
         int i=0;
         printf("Ingrese la contrasenia\n");
         while (i < 5) {

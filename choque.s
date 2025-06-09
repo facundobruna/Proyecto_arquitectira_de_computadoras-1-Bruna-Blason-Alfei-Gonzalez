@@ -1,5 +1,5 @@
 .text
-.global_start
+.global _start
 _start:
 MOV r4,#0 @i=0
 choque_ext_centro: 
