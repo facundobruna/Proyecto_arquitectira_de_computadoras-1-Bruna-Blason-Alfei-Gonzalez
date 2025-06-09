@@ -4,4 +4,5 @@ project(arquitectira_de_computadoras C)
 set(CMAKE_C_STANDARD 11)
 
 add_executable(arquitectira_de_computadoras main.c
-        Funciones.h)
+        Funciones.h
+        conio.h)

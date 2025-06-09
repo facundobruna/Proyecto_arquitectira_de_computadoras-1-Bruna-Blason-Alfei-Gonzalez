@@ -10,7 +10,6 @@ int main() {
     printf("2. El choque\n");
     printf("3. Secuencia personal 1\n");
     printf("4. Secuencia personal 2\n");
-    printf("mateito el trolito");
     printf("5. Salir del programa\n");
 
     while (option!=5) {
