@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdio.h>
-#include "EasyPIO.h"
+//#include "EasyPIO.h"
 #ifdef _WIN32
 #include <conio.h>
 #else
@@ -25,43 +25,37 @@ int kbhit(void) {
     struct termios oldt, newt;
     int ch;
     int oldf;
- 
+
     tcgetattr(STDIN_FILENO, &oldt); // Guardar atributos actuales
     newt = oldt;
     newt.c_lflag &= ~(ICANON | ECHO); // Modo sin buffer
     tcsetattr(STDIN_FILENO, TCSANOW, &newt);
     oldf = fcntl(STDIN_FILENO, F_GETFL, 0); // Guardar flags
     fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK);
- 
+
     ch = getchar();
- 
+
     tcsetattr(STDIN_FILENO, TCSANOW, &oldt); // Restaurar terminal
     fcntl(STDIN_FILENO, F_SETFL, oldf);
- 
+
     if (ch != EOF) {
         ungetc(ch, stdin);
         return 1;
     }
- 
+
     return 0;
 }
 
 #endif
-extern void asm_barra_de_carga(void);
-extern void asm_parimpar(void);
 
 
 
 int velocidad_ms =300;
-int leds[] = {14, 15, 18, 23, 24, 25, 8, 7};
+/*int leds[] = {14, 15, 18, 23, 24, 25, 8, 7};
 void mostrar_leds(unsigned char value) {
     pinsMode(leds, 8, OUTPUT);
     digitalWrites(leds, 8, value);
-}
-void mostrar_led(unsigned char value) {
-    mostrar_leds(value);
-}
-
+}*/
 void password(){
     char contrasenia_correcta[6]="12345";
     char contrasenia_ingresada[6];
@@ -106,8 +100,9 @@ void disp_binary(unsigned char value) {
 
 
 void delay_ms(int ms) {
-    delayMillis(ms);
-    }
+   // delayMillis(ms);
+    usleep(ms*1000);
+}
 
 int controlar_velocidad_o_salir() {
     if (kbhit()) {
@@ -144,24 +139,24 @@ int controlar_velocidad_o_salir() {
 
 void choque(void) {
     printf("\n Secuencia Choque\n ");
-    pinsMode(leds, 8, OUTPUT);
+  //  pinsMode(leds, 8, OUTPUT);
     while (1) {
         if (controlar_velocidad_o_salir()) {
             disp_binary(0);
-           mostrar_leds(0);
+           // mostrar_leds(0);
             return;
         }
         // Del exterior al centro
         for (int i = 0; i < 4; i++) {
             if (controlar_velocidad_o_salir()) {
                 disp_binary(0);
-               mostrar_leds(0);
+              //  mostrar_leds(0);
                 return;
             }
             unsigned char left = 1 << i;
             unsigned char right = 1 << (7 - i);
             disp_binary(left | right);
-           mostrar_leds(~left|~right);
+           // mostrar_leds(left|right);
             delay_ms(velocidad_ms);
         }
 
@@ -169,13 +164,13 @@ void choque(void) {
         for (int i = 2; i >= 0; i--) {  // Cambié el límite para detenerse en 7
             if (controlar_velocidad_o_salir()) {
                 disp_binary(0);
-               mostrar_leds(0);
+               // mostrar_leds(0);
                 return;
             }
             unsigned char left = 1 << i;
             unsigned char right = 1 << (7 - i);
             disp_binary(left | right);
-          mostrar_leds(~left|~right);
+          //  mostrar_leds(left|right);
             delay_ms(velocidad_ms);
         }
     }
@@ -184,55 +179,55 @@ void choque(void) {
 
 void auto_fantastico(void) {
     printf("\n Secuencia Auto fantastico\n ");
-    pinsMode(leds, 8, OUTPUT);
+  //  pinsMode(leds, 8, OUTPUT);
 while (1) {
     if (controlar_velocidad_o_salir()) {
         disp_binary(0);
-       mostrar_leds(0);
+      //  mostrar_leds(0);
         return;
     }
 
     for (int i = 7; i >= 0; i--) {
         if (controlar_velocidad_o_salir()) {
             disp_binary(0);
-            mostrar_leds(0);
+         //   mostrar_leds(0);
             return;
         }
         unsigned char led = 1 << i;
         disp_binary(led);
-        mostrar_leds(~led);
+       // mostrar_leds(led);
         delay_ms(velocidad_ms);
     }
 
     for (int i = 1; i < 8; i++) {
         if (controlar_velocidad_o_salir()) {
             disp_binary(0);
-            mostrar_leds(0);
+           // mostrar_leds(0);
             return;
         }
         unsigned char led = 1 << i;
         disp_binary(led);
-        mostrar_leds(~led);
+      //  mostrar_leds(led);
         delay_ms(velocidad_ms);
     }
 }
 }
 
-/*void barra_de_carga(void) {
+void barra_de_carga(void) {
     unsigned char barra = 0;
     printf("\n Secuencia Barra de carga\n ");
-    pinsMode(leds, 8, OUTPUT);
+   // pinsMode(leds, 8, OUTPUT);
     while (1) {
         // Carga: de izquierda (bit 7) a derecha (bit 0)
         for (int i = 7; i >= 0; i--) {
             if (controlar_velocidad_o_salir()) {
                 disp_binary(0);
-              mostrar_leds(0);
+              //  mostrar_leds(0);
                 return;
             }
             barra |= (1 << i);
             disp_binary(barra);
-           mostrar_leds(~barra);
+          //  mostrar_leds(barra);
             delay_ms(velocidad_ms);
         }
 
@@ -240,12 +235,12 @@ while (1) {
         for (int i = 0; i <= 7; i++) {
             if (controlar_velocidad_o_salir()) {
                 disp_binary(0);
-              mostrar_leds(0);
+              //  mostrar_leds(0);
                 return;
             }
             barra &= ~(1 << i);
             disp_binary(barra);
-           mostrar_leds(~barra);
+         //   mostrar_leds(barra);
             delay_ms(velocidad_ms);
         }
     }
@@ -253,7 +248,7 @@ while (1) {
 
 void luces_alternadas(void) {
     printf("\n Secuencia Par impar\n ");
-   pinsMode(leds, 8, OUTPUT);
+  //  pinsMode(leds, 8, OUTPUT);
     unsigned char tabla[] = {
         0b10101010, // LEDs pares
         0b01010101  // LEDs impares
@@ -263,25 +258,15 @@ void luces_alternadas(void) {
     while (1) {
         if (controlar_velocidad_o_salir()) {
             disp_binary(0);
-          mostrar_leds(0);
+         //   mostrar_leds(0);
             return;
         }
         disp_binary(tabla[i]);
-        mostrar_leds(~tabla[i]);
+      //  mostrar_leds(tabla[i]);
         delay_ms(velocidad_ms);
         i = 1 - i; // alternar entre 0 y 1
     }
-}*/
-void barra_de_carga(void) {
-    printf("\n Secuencia Barra de carga (ASM)\n ");
-    asm_barra_de_carga();  // Llama a la función escrita en Assembly
 }
-
-void luces_alternadas(void) {
-    printf("\n Secuencia Par impar (ASM)\n ");
-    asm_parimpar();  // Llama a la función en Assembly
-}
-
 
 
 

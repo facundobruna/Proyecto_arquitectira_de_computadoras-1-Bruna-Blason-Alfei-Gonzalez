@@ -1,37 +1,42 @@
 .text
-.global _start
-_start:
-    MOV r1, #7 @ LED encendido (bit mas alto)
-    MOV r0, #0
-    carga_izquierda:
-    cmp r1, #-1
-   BLT descarga @ si r1<0 salta a la carga derecha
-   MOV r2, #1
-   LSL r2, r2, r1
-   ORR r0, r0, r2 @ ORR r0 con 1 (bit mas alto)
-    BL mostrar_led @ llama subrutina que muestra a r1
-    BL delay 
-    SUB r1, r1, #1
+.global asm_barra_de_carga
+asm_barra_de_carga:
+    MOV r1, #7
+    MOV r4, #0          @ usamos r4 para acumular el estado de los LEDs
 
-    B carga_izquierda @ vuelve al inicio del bucle
+carga_izquierda:
+    CMP r1, #-1
+    BLT descarga
+    MOV r2, #1
+    LSL r2, r2, r1
+    ORR r4, r4, r2
+    MOV r0, r4          @ pasar valor al primer argumento (r0)
+    BL mostrar_led
+    BL delay
+    SUB r1, r1, #1
+    B carga_izquierda
+
 descarga:
-MOV r1, #0 @ reinicia r1 a 0
+    MOV r1, #0
+
 carga_derecha:
-CMP r1, #7 @ compara r1 con 7
-BGT _start @ si r1>7 vuelve al inicio
-MOV r2, #1
-LSL r2, r2, r1 @ desplaza 1 a la izquierda r1 veces
-BIC r0, r0, r2 @ limpia el bit correspondiente en r0
-BL mostrar_led @ llama subrutina que muestra a r1
-BL delay
-ADD r1, r1, #1 @ incrementa r1
-B carga_derecha @ vuelve al inicio del bucle
+    CMP r1, #8
+    BGE asm_barra_de_carga
+    MOV r2, #1
+    LSL r2, r2, r1
+    BIC r4, r4, r2
+    MOV r0, r4
+    BL mostrar_led
+    BL delay
+    ADD r1, r1, #1
+    B carga_derecha
+
 mostrar_led:
-BX lr
+    BX lr
 
 delay:
-MOV r5, #0x30000
+    MOV r5, #0x30000
 ret_loop:
-SUBS r5, r5, #1
-BNE ret_loop
-BX lr
+    SUBS r5, r5, #1
+    BNE ret_loop
+    BX lr

@@ -1,18 +1,18 @@
 #include <stdio.h>
-
-#include "Funciones.h"
+#include "funciones2.h"
+//#include "Funciones.h"
 
 int main() {
     int option;
+    //pioInit();
     password();
-    printf("\n---Opcion de luces: ---\n");
+    while (option!=5) {
+          printf("\n---Opcion de luces: ---\n");
     printf("1. El auto fantastico\n");
     printf("2. El choque\n");
     printf("3. Secuencia personal 1\n");
     printf("4. Secuencia personal 2\n");
     printf("5. Salir del programa\n");
-
-    while (option!=5) {
         printf("Seleccione una opcion: ");
         scanf("%d", &option);
         while (getchar() != '\n'); 
@@ -24,7 +24,6 @@ int main() {
                 choque();
                 break;
             case 3:
-                /*adn();]*/
                  barra_de_carga();
                 break;
             case 4:
