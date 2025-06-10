@@ -15,7 +15,7 @@ int main() {
     while (option!=5) {
         printf("Seleccione una opcion: ");
         scanf("%d", &option);
-
+        while (getchar() != '\n'); 
         switch (option) {
             case 1:
                 auto_fantastico();
