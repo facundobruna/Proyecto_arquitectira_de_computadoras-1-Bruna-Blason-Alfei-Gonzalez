@@ -49,8 +49,8 @@ int kbhit(void) {
 #endif
 extern void asm_barra_de_carga(void);
 extern void asm_parimpar(void);
-
-
+extern void delay_ms(int ms);
+extern int velocidad_ms;
 
 int velocidad_ms =300;
 int leds[] = {14, 15, 18, 23, 24, 25, 8, 7};
