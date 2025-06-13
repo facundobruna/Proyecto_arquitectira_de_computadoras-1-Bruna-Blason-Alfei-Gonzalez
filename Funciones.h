@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdio.h>
+
 #include "EasyPIO.h"
 #ifdef _WIN32
 #include <conio.h>
@@ -58,9 +59,7 @@ void mostrar_leds(unsigned char value) {
     pinsMode(leds, 8, OUTPUT);
     digitalWrites(leds, 8, value);
 }
-void mostrar_led(unsigned char value) {
-    mostrar_leds(value);
-}
+
 
 void password(){
     char contrasenia_correcta[6]="12345";
@@ -103,10 +102,14 @@ void disp_binary(unsigned char value) {
     }
     printf("\n");
 }
-
+void mostrar_led(unsigned char value) {
+    //  mostrar_leds(value);
+    disp_binary(value);
+}
 
 void delay_ms(int ms) {
-    delayMillis(ms);
+    //delayMillis(ms);
+    usleep(ms);
     }
 
 int controlar_velocidad_o_salir() {
@@ -184,7 +187,7 @@ void choque(void) {
 
 void auto_fantastico(void) {
     printf("\n Secuencia Auto fantastico\n ");
-    pinsMode(leds, 8, OUTPUT);
+   pinsMode(leds, 8, OUTPUT);
 while (1) {
     if (controlar_velocidad_o_salir()) {
         disp_binary(0);
