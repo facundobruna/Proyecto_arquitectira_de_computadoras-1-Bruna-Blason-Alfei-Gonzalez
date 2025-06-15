@@ -17,8 +17,9 @@ carga_izquierda:
     MOV r0, r4
     BL mostrar_led
 
-    LDR r0, =velocidad_ms
-    LDR r0, [r0]
+   @ LDR r0, =velocidad_ms
+    @LDR r0, [r0]
+   MOV r0,#300
     BL delay_ms
 
     SUB r1, r1, #1
@@ -36,8 +37,10 @@ carga_derecha:
     MOV r0, r4
     BL mostrar_led
 
-    LDR r0, =velocidad_ms
-    LDR r0, [r0]
+
+   @ LDR r0, =velocidad_ms
+    @LDR r0, [r0]
+   MOV r0,#300
     BL delay_ms
 
     ADD r1, r1, #1

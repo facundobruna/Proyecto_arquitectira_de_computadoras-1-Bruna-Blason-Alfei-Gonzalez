@@ -1,10 +1,10 @@
 #include <stdio.h>
 //#include "funciones2.h"
 #include "Funciones.h"
-
+int velocidad_ms =300;
 int main() {
     int option;
-   // pioInit();
+    pioInit();
     password();
     while (option!=5) {
           printf("\n---Opcion de luces: ---\n");

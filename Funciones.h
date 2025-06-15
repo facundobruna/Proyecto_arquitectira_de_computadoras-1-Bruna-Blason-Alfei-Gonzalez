@@ -52,8 +52,8 @@ extern void asm_barra_de_carga(void);
 extern void asm_parimpar(void);
 extern void delay_ms(int ms);
 extern int velocidad_ms;
+int verificar_tecla_o_salir();
 
-int velocidad_ms =300;
 int leds[] = {14, 15, 18, 23, 24, 25, 8, 7};
 void mostrar_leds(unsigned char value) {
     pinsMode(leds, 8, OUTPUT);
@@ -103,12 +103,12 @@ void disp_binary(unsigned char value) {
     printf("\n");
 }
 void mostrar_led(unsigned char value) {
-    //  mostrar_leds(value);
+    mostrar_leds(value);
     disp_binary(value);
 }
 
 void delay_ms(int ms) {
-    //delayMillis(ms);
+    delayMillis(ms);
     usleep(ms);
     }
 
@@ -144,7 +144,8 @@ int controlar_velocidad_o_salir() {
     return 0;
 }
 
-
+int verificar_tecla_o_salir(){
+    return controlar_velocidad_o_salir();}
 void choque(void) {
     printf("\n Secuencia Choque\n ");
     pinsMode(leds, 8, OUTPUT);
@@ -164,7 +165,7 @@ void choque(void) {
             unsigned char left = 1 << i;
             unsigned char right = 1 << (7 - i);
             disp_binary(left | right);
-           mostrar_leds(~left|~right);
+           mostrar_leds(left|right);
             delay_ms(velocidad_ms);
         }
 
@@ -178,7 +179,7 @@ void choque(void) {
             unsigned char left = 1 << i;
             unsigned char right = 1 << (7 - i);
             disp_binary(left | right);
-          mostrar_leds(~left|~right);
+          mostrar_leds(left|right);
             delay_ms(velocidad_ms);
         }
     }
@@ -203,7 +204,7 @@ while (1) {
         }
         unsigned char led = 1 << i;
         disp_binary(led);
-        mostrar_leds(~led);
+        mostrar_leds(led);
         delay_ms(velocidad_ms);
     }
 
@@ -215,7 +216,7 @@ while (1) {
         }
         unsigned char led = 1 << i;
         disp_binary(led);
-        mostrar_leds(~led);
+        mostrar_leds(led);
         delay_ms(velocidad_ms);
     }
 }

@@ -1,28 +1,32 @@
-.text
 .global asm_parimpar
 .extern mostrar_led
 .extern delay_ms
 .extern velocidad_ms
 
+.section .text
+
 asm_parimpar:
-    MOV x1, #0b10101010      // Patrón par
-    MOV x2, #0b01010101      // Patrón impar
+    push {lr}             @ Guardar el link register
 
 parimpar_loop:
-    MOV x0, x1
-    BL mostrar_led
+    mov r0, #170          @ 10101010 en binario (pares)
+    bl mostrar_led
 
-    ADRP x0, velocidad_ms
-    ADD x0, x0, :lo12:velocidad_ms
-    LDR x0, [x0]
-    BL delay_ms
+    ldr r1, =velocidad_ms
+    ldr r0, [r1]
+    bl delay_ms
 
-    MOV x0, x2
-    BL mostrar_led
+    mov r0, #85           @ 01010101 en binario (impares)
+    bl mostrar_led
 
-    ADRP x0, velocidad_ms
-    ADD x0, x0, :lo12:velocidad_ms
-    LDR x0, [x0]
-    BL delay_ms
+    ldr r1, =velocidad_ms
+    ldr r0, [r1]
+    bl delay_ms
 
-    B parimpar_loop
+    b parimpar_loop       @ Repetir infinitamente
+
+    pop {lr}
+    bx lr
+
+
+

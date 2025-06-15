@@ -1,46 +1,54 @@
-.text
 .global asm_barra_de_carga
 .extern mostrar_led
 .extern delay_ms
 .extern velocidad_ms
 
+.section .text
+
 asm_barra_de_carga:
-    MOV x1, #7          // contador izquierda
-    MOV x4, #0          // registro acumulador
+    push {lr}           @ Guardar link register
+
+    mov r4, #0          @ r4 será el estado de los LEDs (registro acumulador)
+    mov r5, #0          @ r5 será el índice (de 0 a 7)
+    mov r6, #1          @ Dirección: 1 = derecha, 0 = izquierda
 
 carga_izquierda:
-    CMP x1, #0
-    BLT descarga
-    MOV x2, #1
-    LSL x2, x2, x1
-    ORR x4, x4, x2
-    MOV x0, x4
-    BL mostrar_led
+    cmp r5, #8
+    bge cambio_a_izquierda
 
-    ADRP x0, velocidad_ms
-    ADD x0, x0, :lo12:velocidad_ms
-    LDR x0, [x0]
-    BL delay_ms
+    mov r2, #1
+    lsl r2, r2, r5      @ r2 = 1 << r5
+    orr r4, r4, r2      @ r4 |= (1 << r5)
+    mov r0, r4
+    bl mostrar_led
 
-    SUB x1, x1, #1
-    B carga_izquierda
+    ldr r1, =velocidad_ms
+    ldr r0, [r1]
+    bl delay_ms
 
-descarga:
-    MOV x1, #0
+    add r5, r5, #1
+    b carga_izquierda
+
+cambio_a_izquierda:
+    sub r5, r5, #1
+    b carga_derecha
 
 carga_derecha:
-    CMP x1, #8
-    BGE asm_barra_de_carga
-    MOV x2, #1
-    LSL x2, x2, x1
-    BIC x4, x4, x2
-    MOV x0, x4
-    BL mostrar_led
+    cmp r5, #0
+    blt asm_barra_de_carga
 
-    ADRP x0, velocidad_ms
-    ADD x0, x0, :lo12:velocidad_ms
-    LDR x0, [x0]
-    BL delay_ms
+    mov r2, #1
+    lsl r2, r2, r5
+    bic r4, r4, r2      @ r4 &= ~(1 << r5)
+    mov r0, r4
+    bl mostrar_led
 
-    ADD x1, x1, #1
-    B carga_derecha
+    ldr r1, =velocidad_ms
+    ldr r0, [r1]
+    bl delay_ms
+
+    sub r5, r5, #1
+    b carga_derecha
+
+    pop {lr}
+    bx lr
